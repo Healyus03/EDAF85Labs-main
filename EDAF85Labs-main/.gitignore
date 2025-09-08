@@ -1,0 +1,9 @@
+bin/
+cs/archive
+twits/hello/hello
+twits/intset/example
+twits/intset/unittest
+twits/server/msg_server
+twits/*/*.exe
+.DS_Store
+*~

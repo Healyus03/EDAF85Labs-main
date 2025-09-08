@@ -1,0 +1,42 @@
+{
+	"folders": [
+		{
+			"path": "cs",
+			"name": "CS"
+		},
+		{
+			"path": "clock",
+			"name": "1. Alarm Clock"
+		},
+                {
+                        "path": "lift",
+                        "name": "2. Passenger Lift"
+                },
+                {
+                        "path": "wash",
+                        "name": "3. Washing Machine"
+                },
+	],
+	"settings": {
+		"editor.insertSpaces": true,
+		"java.project.referencedLibraries": [
+			"../cs/labs.jar",
+                ],
+                "github.copilot.editor.enableAutoCompletions": false,
+                "files.autoSave": "onFocusChange",
+		"files.exclude": {
+			"archive": true,
+			"bin": true,
+			".project": true,
+			".settings": true,
+			".classpath": true
+		}
+	},
+	"extensions": {
+		"recommendations": [
+			"redhat.java",
+			"vscjava.vscode-java-pack",
+			"vscjava.vscode-java-debug",
+		]
+	},
+}
