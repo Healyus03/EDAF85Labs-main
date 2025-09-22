@@ -37,29 +37,25 @@ public class WashingProgram3 extends ActorThread<WashingMessage> {
         try {
             System.out.println("washing program 3 started");
             
-            // Switch off heating
+            // Deactivate heating and spinning
             temp.send(new WashingMessage(this, TEMP_IDLE));
-            
-            // Wait for temperature controller to acknowledge 
-            WashingMessage ack1 = receive();
-            System.out.println("got " + ack1);
-
-            // Drain barrel, which may take some time. To ensure the barrel
-            // is drained before we continue, an acknowledgment is required.
-            water.send(new WashingMessage(this, WATER_DRAIN));
-            WashingMessage ack2 = receive();  // wait for acknowledgment
-            System.out.println("got " + ack2);
-
-            // Now that the barrel is drained, we can turn off water regulation.
-            water.send(new WashingMessage(this, WATER_IDLE));
-            WashingMessage ack3 = receive();  // wait for acknowledgment
-            System.out.println("got " + ack3);
-
-            // Switch off spin. We expect an acknowledgment, to ensure
-            // the hatch isn't opened while the barrel is spinning.
+            receive(); // Wait for ACK
             spin.send(new WashingMessage(this, SPIN_OFF));
-            WashingMessage ack4 = receive();  // wait for acknowledgment
-            System.out.println("got " + ack4);
+            receive(); // Wait for ACK
+
+            // Start draining
+            water.send(new WashingMessage(this, WATER_DRAIN_UNTIL_EMPTY));
+            receive(); // Wait for ACK
+
+            // Wait until the barrel is empty.
+            // The water level is checked periodically.
+            while (io.getWaterLevel() > 0) {
+                Thread.sleep(Math.max(50, 300 / Settings.SPEEDUP));
+            }
+
+            // Stop the drain pump
+            water.send(new WashingMessage(this, WATER_IDLE));
+            receive(); // Wait for ACK
 
             // Unlock hatch
             io.lock(false);

@@ -95,9 +95,12 @@ public class WashingProgram2 extends ActorThread<WashingMessage> {
             // --- Centrifuge: spin fast, drain, 5 min ---
             spin.send(new WashingMessage(this, SPIN_FAST));
             receive();
-            water.send(new WashingMessage(this, WATER_DRAIN));
+            water.send(new WashingMessage(this, WATER_DRAIN_UNTIL_EMPTY));
             receive();
-            Thread.sleep(5 * 60000 / Settings.SPEEDUP);
+            long centrifugeEnd = System.currentTimeMillis() + (5 * 60000 / Settings.SPEEDUP);
+            while (System.currentTimeMillis() < centrifugeEnd) {
+                Thread.sleep(Math.max(50, 100 / Settings.SPEEDUP));
+            }
 
             // Stop everything
             spin.send(new WashingMessage(this, SPIN_OFF));

@@ -66,6 +66,8 @@ public class WaterController extends ActorThread<WashingMessage> {
                         }
                     }
                     case DRAIN_UNTIL_EMPTY -> {
+                        // In this mode, just keep the drain pump running.
+                        // The supervising program is responsible for sending WATER_IDLE when done.
                         io.fill(false);
                         io.drain(true);
                     }
