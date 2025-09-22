@@ -4,6 +4,8 @@
     <exclude-output />
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/EDAF85Labs-main/clock/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/EDAF85Labs-main/lift/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/EDAF85Labs-main/wash/src" isTestSource="false" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

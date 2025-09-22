@@ -6,36 +6,50 @@ import wash.io.WashingIO.Spin;
 
 public class SpinController extends ActorThread<WashingMessage> {
 
-    // TODO: add attributes
+    private WashingIO io;
+    private WashingIO.Spin currentSpin = WashingIO.Spin.IDLE;
+    private boolean running = true;
+    private boolean slowLeft = true;
 
     public SpinController(WashingIO io) {
-        // TODO
+        this.io = io;
     }
 
     @Override
     public void run() {
-
-        // this is to demonstrate how to control the barrel spin:
-        // io.setSpinMode(Spin.IDLE);
-
         try {
-
-            // ... TODO ...
-
-            while (true) {
-                // wait for up to a (simulated) minute for a WashingMessage
+            while (running) {
                 WashingMessage m = receiveWithTimeout(60000 / Settings.SPEEDUP);
-
-                // if m is null, it means a minute passed and no message was received
                 if (m != null) {
-                    System.out.println("got " + m);
+                    switch (m.order()) {
+                        case SPIN_SLOW:
+                            currentSpin = slowLeft ? WashingIO.Spin.LEFT : WashingIO.Spin.RIGHT;
+                            io.setSpinMode(currentSpin);
+                            slowLeft = !slowLeft;
+                            m.sender().send(new WashingMessage(this, WashingMessage.Order.ACKNOWLEDGMENT));
+                            break;
+                        case SPIN_FAST:
+                            currentSpin = WashingIO.Spin.FAST;
+                            io.setSpinMode(currentSpin);
+                            m.sender().send(new WashingMessage(this, WashingMessage.Order.ACKNOWLEDGMENT));
+                            break;
+                        case SPIN_OFF:
+                            currentSpin = WashingIO.Spin.IDLE;
+                            io.setSpinMode(currentSpin);
+                            m.sender().send(new WashingMessage(this, WashingMessage.Order.ACKNOWLEDGMENT));
+                            break;
+                        default:
+                            // ignore unknown commands
+                    }
+                } else {
+                    // Timeout: if in SLOW mode, alternate direction
+                    if (currentSpin == WashingIO.Spin.LEFT || currentSpin == WashingIO.Spin.RIGHT) {
+                        currentSpin = (currentSpin == WashingIO.Spin.LEFT) ? WashingIO.Spin.RIGHT : WashingIO.Spin.LEFT;
+                        io.setSpinMode(currentSpin);
+                    }
                 }
-
-                // ... TODO ...
             }
         } catch (InterruptedException unexpected) {
-            // we don't expect this thread to be interrupted,
-            // so throw an error if it happens anyway
             throw new Error(unexpected);
         }
     }

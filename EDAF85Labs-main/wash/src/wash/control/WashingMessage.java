@@ -25,6 +25,7 @@ public record WashingMessage(ActorThread<WashingMessage> sender, Order order) {
         WATER_IDLE,
         WATER_FILL,
         WATER_DRAIN,
+        WATER_DRAIN_UNTIL_EMPTY,
         ACKNOWLEDGMENT
     }
 

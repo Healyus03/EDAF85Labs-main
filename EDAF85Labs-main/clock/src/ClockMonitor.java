@@ -74,18 +74,11 @@ public class ClockMonitor {
         } finally { lock.unlock(); }
     }
 
-    public int getAlarmHours() { lock.lock(); try { return alarmHours; } finally { lock.unlock(); } }
-    public int getAlarmMinutes() { lock.lock(); try { return alarmMinutes; } finally { lock.unlock(); } }
-    public int getAlarmSeconds() { lock.lock(); try { return alarmSeconds; } finally { lock.unlock(); } }
 
     public boolean isAlarmEnabled() { lock.lock(); try { return alarmEnabled; } finally { lock.unlock(); } }
     public void setAlarmEnabled(boolean enabled) { lock.lock(); try { alarmEnabled = enabled; } finally { lock.unlock(); } }
 
     public boolean isAlarmSounding() { lock.lock(); try { return alarmSounding; } finally { lock.unlock(); } }
-    public void setAlarmSounding(boolean sounding) { lock.lock(); try { alarmSounding = sounding; } finally { lock.unlock(); } }
-
-    public boolean isSettingTime() { lock.lock(); try { return settingTime; } finally { lock.unlock(); } }
-    public boolean isSettingAlarm() { lock.lock(); try { return settingAlarm; } finally { lock.unlock(); } }
 
     public boolean shouldSoundAlarm() {
         lock.lock();
